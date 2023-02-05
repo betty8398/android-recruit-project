@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">android-recruit-project</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="status_incubating">募資中</string>
+    <string name="status_success">募資成功</string>
+    <string name="status_published">已開課</string>
+    <string name="goalTime">倒數</string>
+    <string name="person">人</string>
 </resources>
