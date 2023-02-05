@@ -9,4 +9,5 @@ val Teal200 = Color(0xFF03DAC5)
 val orange = Color(0xFFFF9800)
 val green = Color(0xFF03DAC5)
 val grey = Color(0xFF555555)
+val lightGrey = Color(0xFFC2BCBC)
 

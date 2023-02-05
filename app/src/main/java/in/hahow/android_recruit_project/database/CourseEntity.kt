@@ -13,7 +13,7 @@ class CourseEntity(
     val title: String,
     val numSoldTickets: Int,
     val successCriteriaNumSoldTickets: Int,
-    val proposalDueTime: LocalDateTime,
+    val proposalDueTime: LocalDateTime, //TODO 應考慮時間轉換
 )
 
 

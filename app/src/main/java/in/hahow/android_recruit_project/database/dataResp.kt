@@ -2,9 +2,22 @@ package `in`.hahow.android_recruit_project.database
 
 import androidx.compose.runtime.Immutable
 
+/**
+ * 接受 json 檔的抽象層
+ * **/
 data class CourseResp(
     var `data`: List<Data?>? = null
 ) {
+
+    /**
+     * @param successCriteria 成功募資條件
+     * @param numSoldTickets 目前銷售量
+     * @param status 開課狀態
+     * @param proposalDueTime 募資截止日
+     * @param coverImageUrl 課程封面圖
+     * @param title 課程名稱
+     * @param totalVideoLengthInSeconds 總課程時長
+     * **/
     data class Data(
         var successCriteria: SuccessCriteria? = null,
         var numSoldTickets: Int? = null, // 0
@@ -21,10 +34,13 @@ data class CourseResp(
 }
 
 
-
+/**
+ * 開課狀態
+ * */
 @Immutable
 enum class ClassStatus(val status: String) {
     Incubating("INCUBATING"),
     Published("PUBLISHED"),
     Success("SUCCESS")
+    //TODO 可再加上募資失敗
 }

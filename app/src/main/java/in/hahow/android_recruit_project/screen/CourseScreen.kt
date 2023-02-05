@@ -12,11 +12,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
+import androidx.compose.material.Card
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,8 +24,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -37,15 +37,6 @@ import `in`.hahow.android_recruit_project.ui.theme.orange
 import java.time.Duration
 import java.time.LocalDateTime
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
-@Composable
-fun PrevCourse() {
-    val vm = CourseViewModel()
-    CourseScreen(courseVM = vm)
-    vm.setCourseData()
-}
-
 /**
  * 課程頁面
  * **/
@@ -55,11 +46,9 @@ fun CourseScreen(
     courseVM: CourseViewModel
 ) {
     val now = remember { LocalDateTime.now() }
-
     val courseList by courseVM.courseData.collectAsState()
     LazyColumn(
-        modifier = Modifier.padding(8.dp),
-        contentPadding = PaddingValues(8.dp)
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(courseList) { course ->
             CourseCard(course, now)
@@ -73,15 +62,22 @@ fun CourseScreen(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CourseCard(course: CourseEntity, now: LocalDateTime) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        CourseImage(coverImageUrl = course.coverImageUrl, courseStatus = course.status, now)
-        CourseInfo(
-            sale = course.numSoldTickets,
-            target = course.successCriteriaNumSoldTickets,
-            courseName = course.title,
-            proposalDueTime = course.proposalDueTime,
-            now = now
-        )
+    Card(modifier = Modifier.padding(4.dp)) {
+        Row(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CourseImage(coverImageUrl = course.coverImageUrl, courseStatus = course.status, now)
+            CourseInfo(
+                modifier = Modifier.padding(4.dp),
+                sale = course.numSoldTickets,
+                target = course.successCriteriaNumSoldTickets,
+                courseName = course.title,
+                proposalDueTime = course.proposalDueTime,
+                now = now
+            )
+        }
     }
 }
 
@@ -89,7 +85,11 @@ fun CourseCard(course: CourseEntity, now: LocalDateTime) {
  * 課程卡片中用到的圖片
  * **/
 @Composable
-fun CourseImage(coverImageUrl: String?, courseStatus: ClassStatus, now: LocalDateTime) {
+fun CourseImage(
+    coverImageUrl: String?,
+    courseStatus: ClassStatus,
+    now: LocalDateTime
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth(0.35f)
@@ -106,7 +106,6 @@ fun CourseImage(coverImageUrl: String?, courseStatus: ClassStatus, now: LocalDat
             modifier = Modifier
                 .matchParentSize()
                 .clip(MaterialTheme.shapes.small)
-
         )
         StatusLabel(status = courseStatus)
     }
@@ -151,23 +150,40 @@ fun CourseInfo(
     sale: Int,
     courseName: String,
     proposalDueTime: LocalDateTime,
-    now: LocalDateTime
+    now: LocalDateTime,
+    modifier: Modifier = Modifier
 ) {
     val countDown by remember {
         derivedStateOf() {
-            Duration.between(now, proposalDueTime)
+            val diffTime = Duration.between(now, proposalDueTime)
+            if (diffTime.isNegative) {
+                -diffTime.toDays()
+            } else {
+                diffTime.toDays()
+            }
         }
     }
     Column(verticalArrangement = Arrangement.SpaceBetween) {
-        Text(courseName)
+        Text(
+            text = courseName,
+            maxLines = 2,
+            style = MaterialTheme.typography.body2,
+            fontWeight = FontWeight.Bold,
+        )
+
+        Spacer(modifier = Modifier.padding(8.dp))
+
         Row {
             ProgressBar(
+                modifier = Modifier.weight(1f),
                 target = target,
                 sale = sale
             )
             Spacer(Modifier.weight(1f))
-            if (!countDown.isNegative) {
-                CountDown(countDownDayTime = countDown)
+            if (countDown > 0) {
+                CountDown(modifier = Modifier.weight(1f), countDownDayTime = countDown)
+            } else {
+                Spacer(Modifier.weight(1f))
             }
         }
     }
@@ -175,9 +191,10 @@ fun CourseInfo(
 
 @Composable
 fun CountDown(
-    countDownDayTime: Duration
+    modifier: Modifier = Modifier,
+    countDownDayTime: Long,
 ) {
-    Row {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
             painter = painterResource(R.drawable.countdown),
             contentDescription = null,
@@ -190,15 +207,16 @@ fun CountDown(
 
 @Composable
 fun ProgressBar(
+    modifier: Modifier = Modifier,
     target: Int,
-    sale: Int
+    sale: Int,
 ) {
-    Column() {
+    Column(modifier = modifier) {
         if (sale > target) {
             Text(text = "100%")
             LinearProgressIndicator(progress = 1f)
         } else {
-            Text("$sale/$target" + stringResource(R.string.person))
+            Text(stringResource(R.string.person, sale, target))
             val percent = sale / target
             LinearProgressIndicator(progress = percent.toFloat())
         }
