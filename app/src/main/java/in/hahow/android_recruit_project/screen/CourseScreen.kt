@@ -25,8 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -43,8 +41,12 @@ import java.time.LocalDateTime
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CourseScreen(
-    courseVM: CourseViewModel
 ) {
+    val courseVM = CourseViewModel()
+    val context = LocalContext.current
+    LaunchedEffect(key1 = Unit) {
+        courseVM.setCourseData(context)
+    }
     val now = remember { LocalDateTime.now() }
     val courseList by courseVM.courseData.collectAsState()
     LazyColumn(
