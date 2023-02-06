@@ -14,7 +14,7 @@ import `in`.hahow.android_recruit_project.ui.theme.HahowTheme
 import `in`.hahow.android_recruit_project.viewmodel.CourseViewModel
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.O) //TODO desugaring for JAVA 8 LocalDateTime
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

@@ -22,11 +22,11 @@ data class CourseResp(
     data class Data(
         var successCriteria: SuccessCriteria,
         var numSoldTickets: Int, // 0
-        var status: String,
-        var proposalDueTime: String?=null, // 2022-01-06T16:00:00.000Z
+        var status: String,//TODO 若沒有 status 畫面UI打算顯示什麼呢？
+        var proposalDueTime: String? = null, // 2022-01-06T16:00:00.000Z
         var coverImageUrl: String, // https://images.api.hahow.in/images/614eca15a39712000619b672
         var title: String, // 學習 AI 一把抓：點亮人工智慧技能樹
-        var totalVideoLengthInSeconds: Int?=null // 21449
+        var totalVideoLengthInSeconds: Int? = null // 21449
     ) {
         data class SuccessCriteria(
             var numSoldTickets: Int // 30

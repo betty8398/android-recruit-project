@@ -90,7 +90,7 @@ fun CourseCard(course: CourseEntity, now: LocalDateTime) {
 fun CourseImage(
     coverImageUrl: String?,
     courseStatus: ClassStatus,
-    now: LocalDateTime
+    now: LocalDateTime //TODO 判斷募資失敗？
 ) {
     Box(
         modifier = Modifier
@@ -111,7 +111,6 @@ fun CourseImage(
         )
         StatusLabel(status = courseStatus)
     }
-
 }
 
 
@@ -165,7 +164,7 @@ fun CourseInfo(
             }
         }
     }
-    Column(verticalArrangement = Arrangement.SpaceBetween) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.SpaceBetween) {
         Text(
             text = courseName,
             maxLines = 2,
@@ -175,13 +174,13 @@ fun CourseInfo(
 
         Spacer(modifier = Modifier.padding(8.dp))
 
-        Row {
+        Row ( verticalAlignment = Alignment.Bottom){
             ProgressBar(
                 modifier = Modifier.weight(1f),
                 target = target,
                 sale = sale
             )
-            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.weight(0.5f))
             if (countDown > 0) {
                 CountDown(modifier = Modifier.weight(1f), countDownDayTime = countDown)
             } else {
@@ -196,7 +195,7 @@ fun CountDown(
     modifier: Modifier = Modifier,
     countDownDayTime: Long,
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Image(
             painter = painterResource(R.drawable.countdown),
             contentDescription = null,

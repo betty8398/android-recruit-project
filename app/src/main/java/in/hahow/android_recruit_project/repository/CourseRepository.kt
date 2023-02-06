@@ -32,7 +32,7 @@ class CourseRepository {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun respToCourseData(courseResp: CourseResp): List<CourseEntity> {
+    private fun respToCourseData(courseResp: CourseResp): List<CourseEntity> {
         return courseResp.data.let {
             it.map { resp ->
                 CourseEntity(
